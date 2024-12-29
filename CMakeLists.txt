@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(diff)
+add_executable(diff main.cpp)
+target_include_directories(diff PRIVATE src/ )	
+target_compile_options(diff PRIVATE -march=native)
+target_compile_options(diff PRIVATE -fconcepts)
+#target_compile_options(rrtStarBaby PRIVATE -g)
