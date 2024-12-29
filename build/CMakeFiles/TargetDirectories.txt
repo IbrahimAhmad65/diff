@@ -1,3 +1,0 @@
-/home/ibrahim-ahmad/code/diff/build/CMakeFiles/diff.dir
-/home/ibrahim-ahmad/code/diff/build/CMakeFiles/edit_cache.dir
-/home/ibrahim-ahmad/code/diff/build/CMakeFiles/rebuild_cache.dir
