@@ -1,12 +1,11 @@
 #include "Addition.h"
-Addition::Addition(const std::vector<std::shared_ptr<Group>> &elems)
-    : Group(elems) {}
+
+Addition::Addition(const std::vector<std::shared_ptr<Group>> &elems) : Group(elems) {}
+
 Addition::Addition(const Addition *a) : Group(a->get_elements()) {}
 
-std::shared_ptr<Group>
-Addition::apply(std::vector<std::shared_ptr<Group>> &elements) const {
-  std::vector<std::shared_ptr<Group>> elems =
-      std::vector<std::shared_ptr<Group>>(); // could be done lazily
+std::shared_ptr<Group> Addition::apply(std::vector<std::shared_ptr<Group>> &elements) const {
+  std::vector<std::shared_ptr<Group>> elems = std::vector<std::shared_ptr<Group>>(); // could be done lazily
   FLOAT_TYPE output = 0;
   for (const auto &g : elements) {
     if (auto number = std::dynamic_pointer_cast<Number>(g)) {
@@ -28,6 +27,20 @@ Addition::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   return std::make_shared<Addition>(Addition(elems));
 }
 
+std::shared_ptr<Group> Addition::distribute(std::vector<std::shared_ptr<Group>> &elements) const {
+  std::vector<std::shared_ptr<Group>> elems = std::vector<std::shared_ptr<Group>>();
+  for (const auto &g : elements) {
+    if (auto number = std::dynamic_pointer_cast<Addition>(g)) {
+      for (const auto &k : number->get_elements()) {
+        elems.push_back(k);
+      }
+    } else {
+      elems.push_back(g);
+    }
+  }
+  return std::make_shared<Addition>(Addition(elems));
+}
+
 std::ostream &Addition::print(std::ostream &stream) const {
   auto elems = get_elements();
   stream << '(';
@@ -37,6 +50,7 @@ std::ostream &Addition::print(std::ostream &stream) const {
   stream << *elems[elems.size() - 1] << ")";
   return stream;
 }
+
 std::ostream &Addition::latex(std::ostream &stream) const {
   auto elems = get_elements();
   stream << '(';

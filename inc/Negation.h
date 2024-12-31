@@ -12,7 +12,7 @@ public:
   Negation(std::shared_ptr<Group>& g) { local = g; }
   Negation(Group& g) { local = g.clone(); }
   Negation(const Negation *n) { local = n->local; }
-  std::shared_ptr<Group> clone() override{
+  std::shared_ptr<Group> clone() const override {
     return std::make_shared<Negation>(*this);
   }
   std::shared_ptr<Group>

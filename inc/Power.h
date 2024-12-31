@@ -2,35 +2,34 @@
 #include <Group.h>
 #include <iostream>
 #include <memory>
-// stopping. Rename group to function, and have functions operate on functions,
-// numbers, and variables indiscriminately is this needed or can we do template
-// stuff?
-// template<class E> concept Numeric = std::is_arithmetic_v<E>;
-// template<typename T> requires Numeric<T>
+#include <cmath>
+#include "Number.h"
 class Power : public Group {
 public:
-  Power(std::vector<std::shared_ptr<Group>> elems)  : Group(elems){}
-  Power(Group& g) : Group(group->get_elements()){}
-  Power(const Power *n) : Power(*n) {}
-  std::shared_ptr<Group> clone() override{
-    return std::make_shared<Power>(*this);
-  }
+  Power(std::vector<std::shared_ptr<Group>> elems);
+  Power(Group& g);
+  Power(Group& g1, Group& g2);
+
+  Power(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
+  Power(const Power *n);
+  template <typename T>
+  requires std::is_arithmetic_v<T> 
+  Power(std::shared_ptr<Group> g1, T g2);
+
+  template <typename T>
+  requires std::is_arithmetic_v<T>  
+  Power(Group &g1, T g2);
+
+  template <typename T, typename E>
+  requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E>  
+  Power(T g1, E g2);
+  
+  std::shared_ptr<Group> clone() const override;
   std::shared_ptr<Group>
-  apply(std::vector<std::shared_ptr<Group>> &elements) const override {
-    return std::make_shared<Power>(this);
-  }
-  std::shared_ptr<Group> getRaw() { return local; }
+  apply(std::vector<std::shared_ptr<Group>> &elements) const override ;
 
-  std::ostream &print(std::ostream &stream) const override {
-    stream <<"-"<< *local;
-    return stream;
-  }
+  std::ostream &print(std::ostream &stream) const override;
 
-  std::ostream &latex(std::ostream &stream) const override {
-    print(stream);
-    return stream;
-  }
+  std::ostream &latex(std::ostream &stream) const override;
 
-private:
-  std::shared_ptr<Group> local;
 };

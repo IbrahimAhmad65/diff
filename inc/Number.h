@@ -16,18 +16,25 @@ public:
   Number(long n) { local = n; }
   Number(int n) { local = n; }
   Number(const Number *n) { local = n->local; }
-  std::shared_ptr<Group> clone() override{
+  std::shared_ptr<Group> clone() const override{
     return std::make_shared<Number>(*this);
   }
-  std::shared_ptr<Group>
-  apply(std::vector<std::shared_ptr<Group>> &elements) const override {
-    return std::make_shared<Number>(this);
+  std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override {
+    return std::make_shared<Number>(*this);
+  }
+
+  std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const override {
+    return std::make_shared<Number>(*this);
   }
   FLOAT_TYPE getRaw() { return local; }
 
   std::ostream &print(std::ostream &stream) const override {
     stream << local;
     return stream;
+  }
+
+  std::vector<std::shared_ptr<Group>> get_elements() const override{
+    return std::vector<std::shared_ptr<Group>>{std::make_shared<Number>(this)};
   }
 
   std::ostream &latex(std::ostream &stream) const override {

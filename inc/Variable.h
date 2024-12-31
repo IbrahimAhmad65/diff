@@ -8,11 +8,11 @@
 // stuff?
 // template<class E> concept Numeric = std::is_arithmetic_v<E>;
 // template<typename T> requires Numeric<T>
-class Variable : public Group {
+class Variable:public Group {
 public:
   Variable(CHAR_TYPE n) { local = n; }
   Variable(const Variable *n) { local = n->local; }
-  std::shared_ptr<Group> clone() override{
+  std::shared_ptr<Group> clone() const override{
     return std::make_shared<Variable>(*this);
   }
   std::shared_ptr<Group>
@@ -21,6 +21,13 @@ public:
   }
   CHAR_TYPE getRaw() { return local; }
 
+  std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const override{
+    return std::make_shared<Variable>(*this);
+  }
+
+  std::vector<std::shared_ptr<Group>> get_elements() const override{
+    return std::vector<std::shared_ptr<Group>>{std::make_shared<Variable>(*this)};
+  }
   std::ostream &print(std::ostream &stream) const override {
     stream << local;
     return stream;
