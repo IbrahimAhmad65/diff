@@ -61,7 +61,7 @@ std::shared_ptr<Group> Multiplication::distribute(std::vector<std::shared_ptr<Gr
   std::vector<std::shared_ptr<Group>> answer = std::vector<std::shared_ptr<Group>>();
   for (const auto &temp : sop) {
     std::vector<std::shared_ptr<Group>> local = std::vector<std::shared_ptr<Group>>();
-    for (const auto &g : sop[0]->get_elements()) {
+    for (const auto &g : temp->get_elements()) {
       if (auto mult = std::dynamic_pointer_cast<Multiplication>(g)) {
         for (const auto &t : g->get_elements()) {
           local.push_back(t);
@@ -74,7 +74,6 @@ std::shared_ptr<Group> Multiplication::distribute(std::vector<std::shared_ptr<Gr
   }
   if (elements.size() > 2) {
     std::vector<std::shared_ptr<Group>> vec = {std::make_shared<Addition>(Addition(answer)), elements[2]};
-    // std::vector<std::shared_ptr<Group>> vec = {std::make_shared<Addition>(Addition(sop)), elements[2]}; // FIXME
     return distribute(vec);
   }
   return std::make_shared<Addition>(Addition(answer));
