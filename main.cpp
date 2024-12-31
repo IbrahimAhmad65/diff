@@ -14,7 +14,7 @@ int main() {
   Variable b = Variable('b');
   Variable c = Variable('c');
   Variable d = Variable('d');
-  auto mult = (a + c) * (a + c) * (a + c);
+  auto mult = ((a + c) * (a + c) * (a + c) + 5) * (a + c);
   std::cout << *mult << std::endl;
   auto applied = mult->distributeDeep();
   std::cout << *applied << std::endl;

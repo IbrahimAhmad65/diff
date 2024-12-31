@@ -14,15 +14,15 @@ public:
   Power(const Power *n);
   template <typename T>
   requires std::is_arithmetic_v<T> 
-  Power(std::shared_ptr<Group> g1, T g2);
+  Power(std::shared_ptr<Group> g1, const T g2);
 
   template <typename T>
   requires std::is_arithmetic_v<T>  
-  Power(Group &g1, T g2);
+  Power(Group &g1, const T g2);
 
   template <typename T, typename E>
   requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E>  
-  Power(T g1, E g2);
+  Power(const T g1, const E g2);
   
   std::shared_ptr<Group> clone() const override;
   std::shared_ptr<Group>

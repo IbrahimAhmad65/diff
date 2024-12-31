@@ -11,7 +11,7 @@ public:
   Group(const Group *g);
 
   std::shared_ptr<Group> applyDeep() const;
-  std::shared_ptr<Group> distributeDeep() const;
+  virtual std::shared_ptr<Group> distributeDeep() const;
   virtual std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const;
   virtual std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const;
 
