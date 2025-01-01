@@ -19,6 +19,10 @@ public:
   std::shared_ptr<Group> clone() const override{
     return std::make_shared<Number>(*this);
   }
+
+  std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
+    return std::make_shared<Number>(*this);
+  }
   std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override {
     return std::make_shared<Number>(*this);
   }

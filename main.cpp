@@ -14,9 +14,12 @@ int main() {
   Variable b = Variable('b');
   Variable c = Variable('c');
   Variable d = Variable('d');
-  auto mult = ((a + c) * (a + c) * (a + c) + 5) * (a + c);
-  std::cout << *mult << std::endl;
-  auto applied = mult->distributeDeep();
-  std::cout << *applied << std::endl;
+
+  auto n1 = (a + c) * (a + c);
+  std::cout << *n1->applyDeep() << std::endl;
+  // auto n2 = std::dynamic_pointer_cast<Addition>(n1->distribute());
+  // auto n3 = n2->sanitize_distribute(n2);
+  auto n3 = n1->distribute()->distribute();
+  std::cout << *n3 << std::endl;
   return 0;
 }

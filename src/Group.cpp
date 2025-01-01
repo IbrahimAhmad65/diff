@@ -21,6 +21,27 @@ Group::Group(const Group *g) {
   elements = g->elements;
 }
 
+std::shared_ptr<Group> Group::build(std::vector<std::shared_ptr<Group>> elems) const {
+  return std::make_shared<Group>(Group(elems));
+}
+
+std::shared_ptr<Group> Group::formatDeep() const {
+  std::vector<std::shared_ptr<Group>> eApplied = std::vector<std::shared_ptr<Group>>();
+  for (const auto &element : elements) {
+    eApplied.push_back(element->formatDeep());
+  }
+  std::sort(eApplied.begin(), eApplied.end(), comparison);
+  return build(eApplied);
+}
+
+bool comparison(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
+  std::ostringstream oss1;
+  std::ostringstream oss2;
+  oss1 << *g1;
+  oss2 << *g2;
+  return oss1.str().compare(oss2.str()) > 0;
+}
+
 std::shared_ptr<Group> Group::applyDeep() const {
   std::vector<std::shared_ptr<Group>> eApplied = std::vector<std::shared_ptr<Group>>();
   eApplied.reserve(elements.size());
@@ -157,4 +178,106 @@ std::shared_ptr<Group> operator-(Group &g1) {
 
 std::shared_ptr<Group> operator-(std::shared_ptr<Group> g1) {
   return std::make_shared<Negation>(Negation(g1));
+}
+
+bool operator!=(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
+  return !(g1 == g2);
+}
+
+bool operator==(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
+  auto t1 = g1->applyDeep();
+  auto t11 = t1->distribute();
+  auto t111 = t11->formatDeep();
+  auto t2 = g2->applyDeep();
+  auto t22 = t2->distribute();
+  auto t222 = t22->formatDeep();
+  std::ostringstream oss1;
+  std::ostringstream oss2;
+  oss1 << *t111;
+  oss2 << *t222;
+  return oss1.str() == oss2.str();
+  /*
+  if (oss1.str() == oss2.str()) {
+    return true;
+  }
+
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Number>(g2)) {
+      return num1->getRaw() == num2->getRaw();
+    }
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Variable>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Variable>(g2)) {
+      return num1->getRaw() == num2->getRaw();
+    }
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Addition>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Addition>(g2)) {
+      if (num1->get_elements().size() != num2->get_elements().size()) {
+        return false;
+      }
+      auto arr1 = num1->get_elements();
+      auto arr2 = num2->get_elements();
+      for (int i = 0; i < arr1.size(); ++i) {
+        if (!(arr1[i] == arr2[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Multiplication>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Multiplication>(g2)) {
+      if (num1->get_elements().size() != num2->get_elements().size()) {
+        return false;
+      }
+      auto arr1 = num1->get_elements();
+      auto arr2 = num2->get_elements();
+      while (arr1.size() == arr2.size()) {
+        std::cout << "About to find" << std::endl;
+        auto k = std::find(arr2.begin(), arr2.end(), arr1[0]);
+        std::cout << "Done find" << std::endl;
+        if (k == arr2.end()) {
+          std::cout << "Terms not equal" << std::endl;
+          return false;
+        }
+        std::cout << "About to remove" << std::endl;
+        auto n1 = std::remove(arr2.begin(), arr2.end(), arr1[0]);
+        auto n2 = std::remove(arr1.begin(), arr1.end(), arr1[0]);
+        arr1.erase(n1, arr1.end());
+        arr2.erase(n2, arr2.end());
+
+        for (const auto &z : arr1) {
+          std::cout << *z << std::endl;
+        }
+        for (const auto &z : arr2) {
+          std::cout << *z << std::endl;
+        }
+        std::cout << "Done remove" << std::endl;
+      }
+      return true;
+    }
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Power>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Power>(g2)) {
+      if (num1->get_elements().size() != num2->get_elements().size()) {
+        return false;
+      }
+      auto arr1 = num1->get_elements();
+      auto arr2 = num2->get_elements();
+      for (int i = 0; i < arr1.size(); ++i) {
+        if (!(arr1[i] == arr2[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+  return false;
+  */
 }

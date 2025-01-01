@@ -1,4 +1,5 @@
 #include "Addition.h"
+#include "Multiplication.h"
 
 Addition::Addition(const std::vector<std::shared_ptr<Group>> &elems) : Group(elems) {}
 
@@ -23,7 +24,9 @@ std::shared_ptr<Group> Addition::apply(std::vector<std::shared_ptr<Group>> &elem
   if (elems.size() == 0) {
     return std::make_shared<Number>(Number(output));
   }
-  elems.push_back(std::make_shared<Number>(Number(output)));
+  if (output != 0) {
+    elems.push_back(std::make_shared<Number>(Number(output)));
+  }
   return std::make_shared<Addition>(Addition(elems));
 }
 
@@ -39,6 +42,37 @@ std::shared_ptr<Group> Addition::distribute(std::vector<std::shared_ptr<Group>> 
     }
   }
   return std::make_shared<Addition>(Addition(elems));
+}
+
+std::shared_ptr<Group> Addition::distribute() const {
+  auto k = distributeDeep();
+  std::cout << *k << std::endl;
+  auto out = sanitize_distribute(k);
+  return out;
+}
+
+std::shared_ptr<Group> Addition::sanitize_distribute(std::shared_ptr<Group> sop) const {
+  std::vector<std::shared_ptr<Group>> new_sop = std::vector<std::shared_ptr<Group>>();
+  std::unordered_map<std::shared_ptr<Group>, int> map = std::unordered_map<std::shared_ptr<Group>, int>();
+  for (const auto &elem : sop->get_elements()) {
+    if (map.find(elem) == map.end()) {
+      map[elem] = 1;
+    } else {
+      map[elem]++;
+    }
+  }
+  std::vector<std::shared_ptr<Group>> sop_vec = sop->get_elements();
+  for (const std::pair<const std::shared_ptr<Group>, int> &n : map) {
+    std::shared_ptr<Group> elem = n.first;
+    int num = n.second;
+    if (num == 1) {
+      std::cout << *elem << std::endl;
+      new_sop.push_back(elem);
+    } else {
+      new_sop.push_back(elem * num);
+    }
+  }
+  return std::make_shared<Addition>(Addition(new_sop));
 }
 
 std::ostream &Addition::print(std::ostream &stream) const {
