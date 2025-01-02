@@ -17,8 +17,8 @@ int main() {
   Variable d = Variable('d');
   Variable x = Variable('x');
   auto x_ptr = std::make_shared<Variable>(x);
-
-  auto g = Derivative::diff(x * x, x_ptr);
+  auto pow = Power(x,3);
+  auto g = Derivative::diff(pow.clone(), x_ptr);
   std::cout << *g << std::endl;
 
   auto n1 = (a + c) * (a + c) * a;
