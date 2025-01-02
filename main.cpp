@@ -1,6 +1,7 @@
 #include "Derivative.h"
 #include "Negation.h"
 #include "Power.h"
+#include "Substitute.h"
 #include <Addition.h>
 #include <Multiplication.h>
 #include <Number.h>
@@ -17,10 +18,14 @@ int main() {
   Variable d = Variable('d');
   Variable x = Variable('x');
   auto x_ptr = std::make_shared<Variable>(x);
-  auto pow = Power(x,3);
+  auto pow = Power(x_ptr, 3);
   auto g = Derivative::diff(pow.clone(), x_ptr);
   std::cout << *g << std::endl;
-
+  auto n = Derivative::diff(g->applyDeep(), x_ptr);
+  std::cout << *n << std::endl;
+  auto k = substitute(n, x_ptr, std::make_shared<Number>(Number(5)));
+  std::cout << *k << std::endl;
+  /*
   auto n1 = (a + c) * (a + c) * a;
   auto n2 = n1->distribute();
   auto n3 = n2->distribute();
@@ -28,5 +33,6 @@ int main() {
   std::cout << *n2 << std::endl;
   std::cout << *n3 << std::endl;
   std::cout << *n3->formatDeep() << std::endl;
+  */
   return 0;
 }
