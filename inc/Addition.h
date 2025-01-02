@@ -15,6 +15,9 @@ public:
     return std::make_shared<Addition>(*this);
   }
 
+  bool linear() const override{
+    return true;
+  } 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Addition>(Addition(elems));
   }

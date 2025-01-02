@@ -20,6 +20,9 @@ public:
     return std::make_shared<Number>(*this);
   }
 
+  bool linear() const override{
+    return true;
+  } 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Number>(*this);
   }
@@ -49,3 +52,9 @@ public:
 private:
   FLOAT_TYPE local;
 };
+
+bool operator >(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);
+
+bool operator <(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);
+
+bool operator ==(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);

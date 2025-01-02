@@ -1,3 +1,4 @@
+#include "Derivative.h"
 #include "Negation.h"
 #include "Power.h"
 #include <Addition.h>
@@ -14,12 +15,18 @@ int main() {
   Variable b = Variable('b');
   Variable c = Variable('c');
   Variable d = Variable('d');
+  Variable x = Variable('x');
+  auto x_ptr = std::make_shared<Variable>(x);
 
-  auto n1 = (a + c) * (a + c);
-  std::cout << *n1->applyDeep() << std::endl;
-  // auto n2 = std::dynamic_pointer_cast<Addition>(n1->distribute());
-  // auto n3 = n2->sanitize_distribute(n2);
-  auto n3 = n1->distribute()->distribute();
+  auto g = Derivative::diff(x * x, x_ptr);
+  std::cout << *g << std::endl;
+
+  auto n1 = (a + c) * (a + c) * a;
+  auto n2 = n1->distribute();
+  auto n3 = n2->distribute();
+  std::cout << *n1 << std::endl;
+  std::cout << *n2 << std::endl;
   std::cout << *n3 << std::endl;
+  std::cout << *n3->formatDeep() << std::endl;
   return 0;
 }

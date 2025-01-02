@@ -15,8 +15,12 @@ class Multiplication : public Group {
 public:
   Multiplication(const std::vector<std::shared_ptr<Group>> &elems);
   Multiplication(const Multiplication *a);
-  Multiplication(std::shared_ptr<Group>& g);
+  Multiplication(const std::shared_ptr<Group>& g);
+//  Multiplication(std::shared_ptr<Group> g);
 
+  bool linear() const override{
+    return true;
+  } 
   std::shared_ptr<Group> clone() const override{
     return std::make_shared<Multiplication>(*this);
   }

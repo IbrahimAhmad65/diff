@@ -17,6 +17,9 @@ public:
   }
 
 
+  bool linear() const override{
+    return true;
+  } 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Variable>(this);
   }
@@ -41,4 +44,8 @@ public:
 private:
   CHAR_TYPE local;
 };
+bool operator >(std::shared_ptr<Variable> g1,std::shared_ptr<Variable> g2);
 
+bool operator <(std::shared_ptr<Variable> g1,std::shared_ptr<Variable> g2);
+
+bool operator ==(std::shared_ptr<Variable> g1,std::shared_ptr<Variable> g2);

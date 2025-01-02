@@ -4,7 +4,9 @@ Multiplication::Multiplication(const std::vector<std::shared_ptr<Group>> &elems)
 
 Multiplication::Multiplication(const Multiplication *a) : Group(a->get_elements()) {}
 
-Multiplication::Multiplication(std::shared_ptr<Group> &g) : Group(g->get_elements()) {}
+Multiplication::Multiplication(const std::shared_ptr<Group> &g) : Group(g->get_elements()) {}
+
+// Multiplication::Multiplication(std::shared_ptr<Group> g) : Group(g->get_elements()) {}
 
 std::shared_ptr<Group> Multiplication::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   std::vector<std::shared_ptr<Group>> elems = std::vector<std::shared_ptr<Group>>(); // could be done lazily
@@ -49,6 +51,14 @@ std::shared_ptr<Group> Multiplication::apply(std::vector<std::shared_ptr<Group>>
 std::shared_ptr<Group> Multiplication::distribute(std::vector<std::shared_ptr<Group>> &elements) const {
   auto t1 = elements[0];
   auto t2 = elements[1];
+  if (!(t1->linear() && t2->linear())) {
+    if (elements.size() > 2) {
+      std::vector<std::shared_ptr<Group>> vec = {t1 * t2, elements[2]};
+      return distribute(vec);
+    } else {
+      return t1 * t2;
+    }
+  }
   std::vector<std::shared_ptr<Group>> sop = std::vector<std::shared_ptr<Group>>();
   for (const auto &e1 : t1->get_elements()) {
     for (const auto &e2 : t2->get_elements()) {
@@ -76,7 +86,6 @@ std::shared_ptr<Group> Multiplication::distribute(std::vector<std::shared_ptr<Gr
     return distribute(vec);
   }
   return std::make_shared<Addition>(Addition(answer));
-  return std::make_shared<Addition>(Addition(sop));
 }
 
 std::shared_ptr<Group> Multiplication::distribute() const {
@@ -89,6 +98,7 @@ std::shared_ptr<Group> Multiplication::sanitize_distribute(const std::shared_ptr
   std::vector<std::shared_ptr<Group>> new_sop = std::vector<std::shared_ptr<Group>>();
   for (const auto &mult : sop->get_elements()) {
     std::unordered_map<CHAR_TYPE, int> map = std::unordered_map<CHAR_TYPE, int>();
+    std::vector<std::shared_ptr<Group>> vec = std::vector<std::shared_ptr<Group>>();
     for (const auto &elem : mult->get_elements()) {
       if (auto var = std::dynamic_pointer_cast<Variable>(elem)) {
         if (map.find(var->getRaw()) == map.end()) {
@@ -96,9 +106,11 @@ std::shared_ptr<Group> Multiplication::sanitize_distribute(const std::shared_ptr
         } else {
           map[var->getRaw()] = map[var->getRaw()] + 1;
         }
+      } else {
+        // no idea if needed tbh
+        vec.push_back(elem);
       }
     }
-    std::vector<std::shared_ptr<Group>> vec = std::vector<std::shared_ptr<Group>>();
     for (const std::pair<const CHAR_TYPE, int> &n : map) {
       CHAR_TYPE c = n.first;
       int i = n.second;
@@ -118,7 +130,6 @@ std::shared_ptr<Group> Multiplication::sanitize_distribute(const std::shared_ptr
 }
 
 std::ostream &Multiplication::print(std::ostream &stream) const {
-
   auto elems = get_elements();
   stream << '(';
   for (int i = 0; i < elems.size() - 1; ++i) {

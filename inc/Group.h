@@ -36,6 +36,9 @@ public:
 
   std::ostream &build_latex(std::ostream &stream);
   std::shared_ptr<Group> applyDeep() const;
+  virtual bool linear() const{
+    return false;
+  } 
 
 protected:
   std::vector<std::shared_ptr<Group>> elements;
@@ -54,6 +57,7 @@ std::shared_ptr<Group> operator+(Group& g1,T g2);
 
 std::shared_ptr<Group> operator*(Group& g1, Group& g2);
 std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, Group& g2);
+std::shared_ptr<Group> operator*(Group &g1, std::shared_ptr<Group> g2);
 std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
 
 template<typename T> requires std::is_arithmetic_v<T>

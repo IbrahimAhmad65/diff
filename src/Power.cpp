@@ -88,3 +88,49 @@ template Power::Power<int, int>(int g1, int g2);
 template Power::Power<double, int>(double g1, int g2);
 template Power::Power<int, double>(int g1, double g2);
 template Power::Power<double, double>(double g1, double g2);
+
+bool operator>(std::shared_ptr<Power> g1, std::shared_ptr<Power> g2) {
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Number>(g2->get_elements()[1])) {
+      return num1 > num2;
+    }
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Variable>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Number>(g2->get_elements()[1])) {
+      return true;
+    }
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Variable>(g2->get_elements()[1])) {
+      return false;
+    }
+  }
+  std::ostringstream oss1;
+  std::ostringstream oss2;
+  oss1 << *g1;
+  oss2 << *g2;
+  return oss1.str() > oss2.str();
+}
+
+bool operator<(std::shared_ptr<Power> g1, std::shared_ptr<Power> g2) {
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Number>(g2->get_elements()[1])) {
+      return num1 < num2;
+    }
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Variable>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Number>(g2->get_elements()[1])) {
+      return false;
+    }
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1->get_elements()[1])) {
+    if (auto num2 = std::dynamic_pointer_cast<Variable>(g2->get_elements()[1])) {
+      return true;
+    }
+  }
+  std::ostringstream oss1;
+  std::ostringstream oss2;
+  oss1 << *g1;
+  oss2 << *g2;
+  return oss1.str() < oss2.str();
+}

@@ -35,6 +35,27 @@ std::shared_ptr<Group> Group::formatDeep() const {
 }
 
 bool comparison(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g1)) {
+    return true;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Number>(g2)) {
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Variable>(g1)) {
+    return true;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Variable>(g2)) {
+    return false;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Power>(g1)) {
+    if (auto num2 = std::dynamic_pointer_cast<Power>(g2)) {
+      return num1 > num2;
+    }
+    return true;
+  }
+  if (auto num1 = std::dynamic_pointer_cast<Power>(g2)) {
+    return false;
+  }
   std::ostringstream oss1;
   std::ostringstream oss2;
   oss1 << *g1;
@@ -146,6 +167,11 @@ std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, Group &g2) {
   return std::make_shared<Multiplication>(Multiplication(k));
 }
 
+std::shared_ptr<Group> operator*(Group &g1, std::shared_ptr<Group> g2) {
+  auto k = std::vector<std::shared_ptr<Group>>{g1.clone(), g2};
+  return std::make_shared<Multiplication>(Multiplication(k));
+}
+
 std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
   auto k = std::vector<std::shared_ptr<Group>>{g1, g2};
   return std::make_shared<Multiplication>(Multiplication(k));
@@ -155,6 +181,11 @@ template <typename T>
 requires std::is_arithmetic_v<T> std::shared_ptr<Group>
 
 operator*(std::shared_ptr<Group> g1, T g2) {
+  if (auto n = std::dynamic_pointer_cast<Multiplication>(g1)) {
+    std::vector<std::shared_ptr<Group>> elems = n->get_elements();
+    elems.push_back(std::make_shared<Number>(Number(g2)));
+    return std::make_shared<Multiplication>(Multiplication(elems));
+  }
   auto k = std::vector<std::shared_ptr<Group>>{g1, std::make_shared<Number>(Number(g2))};
   return std::make_shared<Multiplication>(Multiplication(k));
 }
@@ -163,6 +194,12 @@ template <typename T>
 requires std::is_arithmetic_v<T> std::shared_ptr<Group>
 
 operator*(Group &g1, T g2) {
+  auto n1 = g1.clone();
+  if (auto n = std::dynamic_pointer_cast<Multiplication>(n1)) {
+    std::vector<std::shared_ptr<Group>> elems = n->get_elements();
+    elems.push_back(std::make_shared<Number>(Number(g2)));
+    return std::make_shared<Multiplication>(Multiplication(elems));
+  }
   auto k = std::vector<std::shared_ptr<Group>>{g1.clone(), std::make_shared<Number>(Number(g2))};
   return std::make_shared<Multiplication>(Multiplication(k));
 }
@@ -196,88 +233,4 @@ bool operator==(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) {
   oss1 << *t111;
   oss2 << *t222;
   return oss1.str() == oss2.str();
-  /*
-  if (oss1.str() == oss2.str()) {
-    return true;
-  }
-
-  if (auto num1 = std::dynamic_pointer_cast<Number>(g1)) {
-    if (auto num2 = std::dynamic_pointer_cast<Number>(g2)) {
-      return num1->getRaw() == num2->getRaw();
-    }
-    return false;
-  }
-  if (auto num1 = std::dynamic_pointer_cast<Variable>(g1)) {
-    if (auto num2 = std::dynamic_pointer_cast<Variable>(g2)) {
-      return num1->getRaw() == num2->getRaw();
-    }
-    return false;
-  }
-  if (auto num1 = std::dynamic_pointer_cast<Addition>(g1)) {
-    if (auto num2 = std::dynamic_pointer_cast<Addition>(g2)) {
-      if (num1->get_elements().size() != num2->get_elements().size()) {
-        return false;
-      }
-      auto arr1 = num1->get_elements();
-      auto arr2 = num2->get_elements();
-      for (int i = 0; i < arr1.size(); ++i) {
-        if (!(arr1[i] == arr2[i])) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-  if (auto num1 = std::dynamic_pointer_cast<Multiplication>(g1)) {
-    if (auto num2 = std::dynamic_pointer_cast<Multiplication>(g2)) {
-      if (num1->get_elements().size() != num2->get_elements().size()) {
-        return false;
-      }
-      auto arr1 = num1->get_elements();
-      auto arr2 = num2->get_elements();
-      while (arr1.size() == arr2.size()) {
-        std::cout << "About to find" << std::endl;
-        auto k = std::find(arr2.begin(), arr2.end(), arr1[0]);
-        std::cout << "Done find" << std::endl;
-        if (k == arr2.end()) {
-          std::cout << "Terms not equal" << std::endl;
-          return false;
-        }
-        std::cout << "About to remove" << std::endl;
-        auto n1 = std::remove(arr2.begin(), arr2.end(), arr1[0]);
-        auto n2 = std::remove(arr1.begin(), arr1.end(), arr1[0]);
-        arr1.erase(n1, arr1.end());
-        arr2.erase(n2, arr2.end());
-
-        for (const auto &z : arr1) {
-          std::cout << *z << std::endl;
-        }
-        for (const auto &z : arr2) {
-          std::cout << *z << std::endl;
-        }
-        std::cout << "Done remove" << std::endl;
-      }
-      return true;
-    }
-    return false;
-  }
-  if (auto num1 = std::dynamic_pointer_cast<Power>(g1)) {
-    if (auto num2 = std::dynamic_pointer_cast<Power>(g2)) {
-      if (num1->get_elements().size() != num2->get_elements().size()) {
-        return false;
-      }
-      auto arr1 = num1->get_elements();
-      auto arr2 = num2->get_elements();
-      for (int i = 0; i < arr1.size(); ++i) {
-        if (!(arr1[i] == arr2[i])) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-  return false;
-  */
 }

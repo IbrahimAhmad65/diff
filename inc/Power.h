@@ -4,12 +4,17 @@
 #include <memory>
 #include <cmath>
 #include "Number.h"
+#include "Variable.h"
 class Power : public Group {
 public:
   Power(std::vector<std::shared_ptr<Group>> elems);
   Power(Group& g);
   Power(const Power* p);
   Power(Group& g1, Group& g2);
+
+  bool linear() const override{
+    return false;
+  } 
 
   Power(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
 
@@ -22,12 +27,14 @@ public:
   }
 
   std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const{
-    return std::make_shared<Power>(Power(elements));
+    auto out = std::make_shared<Power>(Power(elements));
+    return out;
   }
 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Power>(Power(elems));
   }
+
   Power( Power *n);
   template <typename T>
   requires std::is_arithmetic_v<T> 
@@ -55,3 +62,6 @@ public:
   std::ostream &latex(std::ostream &stream) const override;
 
 };
+
+bool operator >(std::shared_ptr<Power> g1,std::shared_ptr<Power> g2);
+bool operator <(std::shared_ptr<Power> g1,std::shared_ptr<Power> g2);

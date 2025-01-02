@@ -46,7 +46,6 @@ std::shared_ptr<Group> Addition::distribute(std::vector<std::shared_ptr<Group>> 
 
 std::shared_ptr<Group> Addition::distribute() const {
   auto k = distributeDeep();
-  std::cout << *k << std::endl;
   auto out = sanitize_distribute(k);
   return out;
 }
@@ -66,7 +65,6 @@ std::shared_ptr<Group> Addition::sanitize_distribute(std::shared_ptr<Group> sop)
     std::shared_ptr<Group> elem = n.first;
     int num = n.second;
     if (num == 1) {
-      std::cout << *elem << std::endl;
       new_sop.push_back(elem);
     } else {
       new_sop.push_back(elem * num);
