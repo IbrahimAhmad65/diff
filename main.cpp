@@ -25,6 +25,8 @@ int main() {
   std::cout << *n << std::endl;
   auto k = substitute(n, x_ptr, std::make_shared<Number>(Number(5)));
   std::cout << *k << std::endl;
+  auto j = k->applyDeep();
+  std::cout << *j << std::endl;
   /*
   auto n1 = (a + c) * (a + c) * a;
   auto n2 = n1->distribute();
