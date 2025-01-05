@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "Negation.h"
 #include "Power.h"
+#include "Division.h"
 #include "Substitute.h"
 #include <Addition.h>
 #include <Multiplication.h>
@@ -20,7 +21,7 @@ int main() {
   Variable x = Variable('x');
   Number n1 = Number(3);
   Number n2 = Number(5);
-  auto p = Log(n1, n2);
+  auto p = Division(n1, n2);
   std::cout << *p.applyDeep() << std::endl;
 
   auto x_ptr = std::make_shared<Variable>(x);
