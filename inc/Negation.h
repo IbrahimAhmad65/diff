@@ -41,3 +41,11 @@ public:
 private:
   std::shared_ptr<Group> local;
 };
+
+inline std::shared_ptr<Group> operator-(Group &g1) {
+  return std::make_shared<Negation>(Negation(g1));
+}
+
+inline std::shared_ptr<Group> operator-(std::shared_ptr<Group> g1) {
+  return std::make_shared<Negation>(Negation(g1));
+}

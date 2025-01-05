@@ -1,6 +1,7 @@
 #pragma once
 #include "Group.h"
 #include "Multiplication.h"
+#include "Division.h"
 #include "Addition.h"
 #include "Log.h"
 #include "Power.h"

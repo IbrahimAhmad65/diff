@@ -42,20 +42,32 @@ public:
   Power( Power *n);
   template <typename T>
   requires std::is_arithmetic_v<T> 
-  Power(std::shared_ptr<Group> g1,  T g2);
+  Power(std::shared_ptr<Group> g1,  T g2) {
+    elements.push_back(g1);
+    auto two = Number(g2);
+    elements.push_back(two.clone());
+  }
+
 
   template <typename T>
   requires std::is_arithmetic_v<T>  
-  Power(Group &g1,  T g2);
+  Power(Group &g1,  T g2){
+    elements.push_back(g1.clone());
+    auto two = Number(g2);
+    elements.push_back(two.clone());
+  }
   
-  template <typename T>
-  requires std::is_arithmetic_v<T>  
-  Power(Group g1,  T g2);
+  
 
 
   template <typename T, typename E>
   requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E>  
-  Power( T g1,  E g2);
+  Power( T g1,  E g2){
+    auto one = Number(g1);
+    elements.push_back(one.clone());
+    auto two = Number(g2);
+    elements.push_back(two.clone());
+  }
   
   std::shared_ptr<Group>
   apply(std::vector<std::shared_ptr<Group>> &elements) const override ;

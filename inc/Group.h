@@ -7,9 +7,6 @@
 #include <string>
 #include <cxxabi.h>
 
-class Addition;
-class Multiplication;
-
 class Group{
 public:
   Group();
@@ -43,30 +40,7 @@ protected:
   std::vector<std::shared_ptr<Group>> elements;
 };
 bool comparison(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
-std::shared_ptr<Group> operator+(Group& g1, Group& g2);
-std::shared_ptr<Group> operator+(std::shared_ptr<Group> g1, Group& g2);
-std::shared_ptr<Group> operator+(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
 
-template<typename T> requires std::is_arithmetic_v<T>
-std::shared_ptr<Group> operator+(std::shared_ptr<Group> g1,T g2);
-
-template<typename T> requires std::is_arithmetic_v<T>
-std::shared_ptr<Group> operator+(Group& g1,T g2);
-
-template<typename T> requires std::is_arithmetic_v<T>
-std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1,T g2);
-
-template<typename T> requires std::is_arithmetic_v<T>
-std::shared_ptr<Group> operator*(Group& g1,T g2);
-
-
-std::shared_ptr<Group> operator*(Group& g1, Group& g2);
-std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, Group& g2);
-std::shared_ptr<Group> operator*(Group &g1, std::shared_ptr<Group> g2);
-std::shared_ptr<Group> operator*(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
-
-std::shared_ptr<Group> operator-(Group& g1);
-std::shared_ptr<Group> operator-(std::shared_ptr<Group> g1);
 
 bool operator==(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
 bool operator!=(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2);
@@ -120,3 +94,4 @@ public:
     return hashString(typeid(Derived).name());
   }
 };
+

@@ -29,7 +29,8 @@ std::shared_ptr<Group> Log::apply(std::vector<std::shared_ptr<Group>> &elements)
 }
 
 std::ostream &Log::print(std::ostream &stream) const {
-  stream << "log_" << *get_elements()[0];
+  // stream << "log_" << *get_elements()[0];
+  stream << "ln";
   stream << "(" << *get_elements()[1] << ")";
   return stream;
 }
@@ -50,9 +51,9 @@ requires std::is_arithmetic_v<T> Log::Log(std::shared_ptr<Group> g1, T g2) {
 template <typename T>
 
 requires std::is_arithmetic_v<T> Log::Log(T g2, std::shared_ptr<Group> g1) {
-  elements.push_back(g1);
   auto two = Number(g2);
   elements.push_back(two.clone());
+  elements.push_back(g1);
 }
 
 template Log::Log<int>(std::shared_ptr<Group> g1, int g2);
