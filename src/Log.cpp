@@ -29,8 +29,7 @@ std::shared_ptr<Group> Log::apply(std::vector<std::shared_ptr<Group>> &elements)
 }
 
 std::ostream &Log::print(std::ostream &stream) const {
-  // stream << "log_" << *get_elements()[0];
-  stream << "ln";
+  stream << "log_" << *get_elements()[0];
   stream << "(" << *get_elements()[1] << ")";
   return stream;
 }
