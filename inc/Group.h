@@ -5,6 +5,13 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cxxabi.h>
+/*
+template<typename Derived>
+class Base : public Group{
+
+}
+*/
 class Group{
 public:
   Group();
@@ -30,6 +37,7 @@ public:
   friend std::ostream &operator<<(std::ostream &stream, const Group &g) {
     return g.print(stream);
   } 
+   
   virtual std::shared_ptr<Group> clone() const{
     return std::make_shared<Group>(*this);
   }
@@ -39,6 +47,7 @@ public:
   virtual bool linear() const{
     return false;
   } 
+   
 
 protected:
   std::vector<std::shared_ptr<Group>> elements;

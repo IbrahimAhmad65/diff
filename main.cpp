@@ -1,4 +1,5 @@
 #include "Derivative.h"
+#include "Log.h"
 #include "Negation.h"
 #include "Power.h"
 #include "Substitute.h"
@@ -17,6 +18,12 @@ int main() {
   Variable c = Variable('c');
   Variable d = Variable('d');
   Variable x = Variable('x');
+  Number n1 = Number(3);
+  Number n2 = Number(5);
+  auto p = Log(n1, n2);
+  std::cout << p.name() << std::endl;
+  std::cout << *p.applyDeep() << std::endl;
+
   auto x_ptr = std::make_shared<Variable>(x);
   auto pow = Power(x_ptr, 3);
   auto g = Derivative::diff(pow.clone(), x_ptr);
