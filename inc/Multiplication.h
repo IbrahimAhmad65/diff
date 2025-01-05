@@ -11,23 +11,16 @@
 #include <type_traits>
 #include <vector>
 #include <unordered_map>
-class Multiplication : public Group {
+class Multiplication : public Base<Multiplication> {
 public:
   Multiplication(const std::vector<std::shared_ptr<Group>> &elems);
   Multiplication(const Multiplication *a);
   Multiplication(const std::shared_ptr<Group>& g);
-//  Multiplication(std::shared_ptr<Group> g);
 
   bool linear() const override{
     return true;
   } 
-  std::shared_ptr<Group> clone() const override{
-    return std::make_shared<Multiplication>(*this);
-  }
 
-  std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
-    return std::make_shared<Multiplication>(Multiplication(elems));
-  }
   std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override;
 
   std::shared_ptr<Group> distribute() const override;

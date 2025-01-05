@@ -24,9 +24,14 @@ int main() {
   std::cout << *p.applyDeep() << std::endl;
 
   auto x_ptr = std::make_shared<Variable>(x);
-  auto pow = Power(x_ptr, 3);
-  auto g = Derivative::diff(pow.clone(), x_ptr);
+  auto pow = Power(x_ptr, x_ptr);
+
+  auto log = Log(x_ptr, x_ptr);
+
+  //auto g = Derivative::diff(pow.clone(), x_ptr);
+  auto g = Derivative::diff(log.clone(), x_ptr);
   std::cout << *g << std::endl;
+  exit(1);
   auto n = Derivative::diff(g->applyDeep(), x_ptr);
   std::cout << *n << std::endl;
   auto k = substitute(n, x_ptr, std::make_shared<Number>(Number(5)));

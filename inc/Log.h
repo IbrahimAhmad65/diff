@@ -5,7 +5,8 @@
 #include <cmath>
 #include "Number.h"
 #include "Variable.h"
-class Log : public Group {
+
+class Log : public Base<Log> {
 public:
   Log(std::vector<std::shared_ptr<Group>> elems);
   Log(Group& g);
@@ -26,9 +27,11 @@ public:
     return build(eApplied);
   }
 
+  std::shared_ptr<Group> distribute() const{
+    return distributeDeep();
+  }
   std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const{
-    auto out = std::make_shared<Log>(Log(elements));
-    return out;
+    return std::make_shared<Log>(Log(elements));
   }
 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
@@ -39,21 +42,30 @@ public:
   template <typename T>
   requires std::is_arithmetic_v<T> 
   Log(std::shared_ptr<Group> g1,  T g2);
+  
+  template <typename T>
+  requires std::is_arithmetic_v<T> 
+  Log(T g2,std::shared_ptr<Group> g1);
+
 
   template <typename T>
   requires std::is_arithmetic_v<T>  
-  Log(Group &g1,  T g2);
+  Log(T g2, Group &g1);
   
   template <typename T>
   requires std::is_arithmetic_v<T>  
+  Log(Group &g1,  T g2);
+ 
+ /* 
+  template <typename T>
+  requires std::is_arithmetic_v<T>  
   Log(Group g1,  T g2);
-
+*/
 
   template <typename T, typename E>
   requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E>  
   Log( T g1,  E g2);
   
-  std::shared_ptr<Group> clone() const override;
   std::shared_ptr<Group>
   apply(std::vector<std::shared_ptr<Group>> &elements) const override ;
 

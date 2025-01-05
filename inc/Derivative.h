@@ -2,6 +2,7 @@
 #include "Group.h"
 #include "Multiplication.h"
 #include "Addition.h"
+#include "Log.h"
 #include "Power.h"
 #include "Variable.h"
 #include "Number.h"

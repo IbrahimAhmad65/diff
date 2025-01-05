@@ -5,7 +5,7 @@
 #include <cmath>
 #include "Number.h"
 #include "Variable.h"
-class Power : public Group {
+class Power : public Base<Power> {
 public:
   Power(std::vector<std::shared_ptr<Group>> elems);
   Power(Group& g);
@@ -26,14 +26,18 @@ public:
     return build(eApplied);
   }
 
+  std::shared_ptr<Group> distribute() const{
+    auto out = distributeDeep();
+    return out;
+  }
   std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const{
     auto out = std::make_shared<Power>(Power(elements));
     return out;
   }
 
-  std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
+  /*std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Power>(Power(elems));
-  }
+  }*/
 
   Power( Power *n);
   template <typename T>
@@ -53,7 +57,6 @@ public:
   requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E>  
   Power( T g1,  E g2);
   
-  std::shared_ptr<Group> clone() const override;
   std::shared_ptr<Group>
   apply(std::vector<std::shared_ptr<Group>> &elements) const override ;
 

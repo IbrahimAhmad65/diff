@@ -2,19 +2,13 @@
 #include <Group.h>
 #include <iostream>
 #include <memory>
-// stopping. Rename group to function, and have functions operate on functions,
-// numbers, and variables indiscriminately is this needed or can we do template
-// stuff?
-// template<class E> concept Numeric = std::is_arithmetic_v<E>;
-// template<typename T> requires Numeric<T>
-class Negation : public Group {
+class Negation : public Base<Negation> {
 public:
   Negation(std::shared_ptr<Group>& g) { local = g; }
   Negation(Group& g) { local = g.clone(); }
   Negation(const Negation *n) { local = n->local; }
-  std::shared_ptr<Group> clone() const override {
-    return std::make_shared<Negation>(*this);
-  }
+  Negation(std::vector<std::shared_ptr<Group>> &elements) { local = elements[0]; }
+   
   std::shared_ptr<Group>
   apply(std::vector<std::shared_ptr<Group>> &elements) const override {
     return std::make_shared<Negation>(this);
@@ -30,6 +24,19 @@ public:
     print(stream);
     return stream;
   }
+
+  bool linear() const override{
+    return true;
+  }
+
+
+  std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const override{
+    return std::make_shared<Negation>(this);
+  };  
+
+  std::shared_ptr<Group> distribute() const override{
+    return std::make_shared<Negation>(this);
+  };  
 
 private:
   std::shared_ptr<Group> local;

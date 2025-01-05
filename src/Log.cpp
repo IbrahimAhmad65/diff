@@ -1,24 +1,20 @@
 #include "Log.h"
 
-Log::Log(std::vector<std::shared_ptr<Group>> elems) : Group(elems) {}
+Log::Log(std::vector<std::shared_ptr<Group>> elems) : Base(elems) {}
 
-Log::Log(Group &g) : Group(g.get_elements()) {}
+Log::Log(Group &g) : Base(g.get_elements()) {}
 
-Log::Log(Group &g1, Group &g2) : Group() {
+Log::Log(Group &g1, Group &g2) : Base() {
   elements.push_back(g1.clone());
   elements.push_back(g2.clone());
 }
 
-Log::Log(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) : Group() {
+Log::Log(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) : Base() {
   elements.push_back(g1);
   elements.push_back(g2);
 }
 
 Log::Log(const Log *n) : Log(*n) {}
-
-std::shared_ptr<Group> Log::clone() const {
-  return std::make_shared<Log>(*this);
-}
 
 std::shared_ptr<Group> Log::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   auto base = elements[0];
@@ -51,8 +47,19 @@ requires std::is_arithmetic_v<T> Log::Log(std::shared_ptr<Group> g1, T g2) {
   elements.push_back(two.clone());
 }
 
+template <typename T>
+
+requires std::is_arithmetic_v<T> Log::Log(T g2, std::shared_ptr<Group> g1) {
+  elements.push_back(g1);
+  auto two = Number(g2);
+  elements.push_back(two.clone());
+}
+
 template Log::Log<int>(std::shared_ptr<Group> g1, int g2);
 template Log::Log<double>(std::shared_ptr<Group> g1, double g2);
+
+template Log::Log<int>(int g2, std::shared_ptr<Group> g1);
+template Log::Log<double>(double g2, std::shared_ptr<Group> g1);
 
 template <typename T>
 
@@ -62,9 +69,20 @@ requires std::is_arithmetic_v<T> Log::Log(Group &g1, T g2) {
   elements.push_back(two.clone());
 }
 
+template <typename T>
+
+requires std::is_arithmetic_v<T> Log::Log(T g2, Group &g1) {
+  elements.push_back(g1.clone());
+  auto two = Number(g2);
+  elements.push_back(two.clone());
+}
+
+template Log::Log<int>(int g2, Group &g1);
+template Log::Log<double>(double g2, Group &g1);
+
 template Log::Log<int>(Group &g1, int g2);
 template Log::Log<double>(Group &g1, double g2);
-
+/*
 template <typename T>
 
 requires std::is_arithmetic_v<T> Log::Log(Group g1, T g2) {
@@ -75,7 +93,7 @@ requires std::is_arithmetic_v<T> Log::Log(Group g1, T g2) {
 
 template Log::Log<int>(Group g1, int g2);
 template Log::Log<double>(Group g1, double g2);
-
+*/
 template <typename T, typename E>
 
 requires std::is_arithmetic_v<T> && std::is_arithmetic_v<E> Log::Log(T g1, E g2) {

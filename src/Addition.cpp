@@ -1,9 +1,9 @@
 #include "Addition.h"
 #include "Multiplication.h"
 
-Addition::Addition(const std::vector<std::shared_ptr<Group>> &elems) : Group(elems) {}
+Addition::Addition(const std::vector<std::shared_ptr<Group>> &elems) : Base(elems) {}
 
-Addition::Addition(const Addition *a) : Group(a->get_elements()) {}
+Addition::Addition(const Addition *a) : Base(a->get_elements()) {}
 
 std::shared_ptr<Group> Addition::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   std::vector<std::shared_ptr<Group>> elems = std::vector<std::shared_ptr<Group>>(); // could be done lazily

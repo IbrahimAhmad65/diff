@@ -4,9 +4,7 @@
 #include "Negation.h"
 
 Group::Group() {
-  elements = std::vector<std::shared_ptr<Group>>(); // can be split into a seperate
-                                                    // constructor where elements is
-                                                    // not made to save mem
+  elements = std::vector<std::shared_ptr<Group>>();
 }
 
 Group::Group(const std::vector<std::shared_ptr<Group>> &elems) {
@@ -19,10 +17,6 @@ Group::Group(const std::shared_ptr<Group> &g) {
 
 Group::Group(const Group *g) {
   elements = g->elements;
-}
-
-std::shared_ptr<Group> Group::build(std::vector<std::shared_ptr<Group>> elems) const {
-  return std::make_shared<Group>(Group(elems));
 }
 
 std::shared_ptr<Group> Group::formatDeep() const {
@@ -74,10 +68,6 @@ std::shared_ptr<Group> Group::applyDeep() const {
   return out;
 }
 
-std::shared_ptr<Group> Group::apply(std::vector<std::shared_ptr<Group>> &elements) const {
-  return std::make_shared<Group>(this);
-};
-
 std::shared_ptr<Group> Group::distributeDeep() const {
   std::vector<std::shared_ptr<Group>> eApplied = std::vector<std::shared_ptr<Group>>();
   eApplied.reserve(elements.size());
@@ -90,10 +80,6 @@ std::shared_ptr<Group> Group::distributeDeep() const {
 
   return out;
 }
-
-std::shared_ptr<Group> Group::distribute(std::vector<std::shared_ptr<Group>> &elements) const {
-  return std::make_shared<Group>(this);
-};
 
 std::vector<std::shared_ptr<Group>> Group::get_elements() const {
   return elements;

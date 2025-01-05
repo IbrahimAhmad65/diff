@@ -1,12 +1,12 @@
 #include "Multiplication.h"
 
-Multiplication::Multiplication(const std::vector<std::shared_ptr<Group>> &elems) : Group(elems) {}
+Multiplication::Multiplication(const std::vector<std::shared_ptr<Group>> &elems) : Base(elems) {}
 
-Multiplication::Multiplication(const Multiplication *a) : Group(a->get_elements()) {}
+Multiplication::Multiplication(const Multiplication *a) : Base(a->get_elements()) {}
 
-Multiplication::Multiplication(const std::shared_ptr<Group> &g) : Group(g->get_elements()) {}
+Multiplication::Multiplication(const std::shared_ptr<Group> &g) : Base(g->get_elements()) {}
 
-// Multiplication::Multiplication(std::shared_ptr<Group> g) : Group(g->get_elements()) {}
+// Multiplication::Multiplication(std::shared_ptr<Group> g) : Base(g->get_elements()) {}
 
 std::shared_ptr<Group> Multiplication::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   std::vector<std::shared_ptr<Group>> elems = std::vector<std::shared_ptr<Group>>(); // could be done lazily

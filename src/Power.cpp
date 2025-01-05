@@ -1,24 +1,24 @@
 #include "Power.h"
 
-Power::Power(std::vector<std::shared_ptr<Group>> elems) : Group(elems) {}
+Power::Power(std::vector<std::shared_ptr<Group>> elems) : Base(elems) {}
 
-Power::Power(Group &g) : Group(g.get_elements()) {}
+Power::Power(Group &g) : Base(g.get_elements()) {}
 
-Power::Power(Group &g1, Group &g2) : Group() {
+Power::Power(Group &g1, Group &g2) : Base() {
   elements.push_back(g1.clone());
   elements.push_back(g2.clone());
 }
 
-Power::Power(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) : Group() {
+Power::Power(std::shared_ptr<Group> g1, std::shared_ptr<Group> g2) : Base() {
   elements.push_back(g1);
   elements.push_back(g2);
 }
 
 Power::Power(const Power *n) : Power(*n) {}
 
-std::shared_ptr<Group> Power::clone() const {
+/*std::shared_ptr<Group> Power::clone() const {
   return std::make_shared<Power>(*this);
-}
+}*/
 
 std::shared_ptr<Group> Power::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   auto base = elements[0];
@@ -63,17 +63,6 @@ requires std::is_arithmetic_v<T> Power::Power(Group &g1, T g2) {
 
 template Power::Power<int>(Group &g1, int g2);
 template Power::Power<double>(Group &g1, double g2);
-
-template <typename T>
-
-requires std::is_arithmetic_v<T> Power::Power(Group g1, T g2) {
-  elements.push_back(g1.clone());
-  auto two = Number(g2);
-  elements.push_back(two.clone());
-}
-
-template Power::Power<int>(Group g1, int g2);
-template Power::Power<double>(Group g1, double g2);
 
 template <typename T, typename E>
 

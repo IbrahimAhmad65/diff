@@ -8,7 +8,7 @@
 // stuff?
 // template<class E> concept Numeric = std::is_arithmetic_v<E>;
 // template<typename T> requires Numeric<T>
-class Number : public Group {
+class Number : public Base<Number> {
 public:
   Number(float n) { local = n; }
   Number(double n) { local = n; }
@@ -16,17 +16,17 @@ public:
   Number(long n) { local = n; }
   Number(int n) { local = n; }
   Number(const Number *n) { local = n->local; }
-  std::shared_ptr<Group> clone() const override{
-    return std::make_shared<Number>(*this);
-  }
+  Number(std::vector<std::shared_ptr<Group>> &elements){ local =-1;}
 
   bool linear() const override{
     return true;
   } 
-  std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
+  
+  std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override {
     return std::make_shared<Number>(*this);
   }
-  std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override {
+
+  std::shared_ptr<Group> distribute() const override {
     return std::make_shared<Number>(*this);
   }
 
