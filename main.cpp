@@ -21,7 +21,6 @@ int main() {
   Number n1 = Number(3);
   Number n2 = Number(5);
   auto p = Log(n1, n2);
-  std::cout << p.name() << std::endl;
   std::cout << *p.applyDeep() << std::endl;
 
   auto x_ptr = std::make_shared<Variable>(x);

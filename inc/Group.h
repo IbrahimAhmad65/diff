@@ -6,12 +6,7 @@
 #include <sstream>
 #include <string>
 #include <cxxabi.h>
-/*
-template<typename Derived>
-class Base : public Group{
 
-}
-*/
 class Group{
 public:
   Group();
@@ -38,16 +33,14 @@ public:
     return g.print(stream);
   } 
    
-  virtual std::shared_ptr<Group> clone() const{
-    return std::make_shared<Group>(*this);
-  }
-
   std::ostream &build_latex(std::ostream &stream);
   std::shared_ptr<Group> applyDeep() const;
   virtual bool linear() const{
     return false;
   } 
-   
+  virtual std::shared_ptr<Group> clone() const{
+    return std::make_shared<Group>(*this);
+  }   
 
 protected:
   std::vector<std::shared_ptr<Group>> elements;
