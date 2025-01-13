@@ -90,43 +90,7 @@ std::shared_ptr<Group> Multiplication::distribute(std::vector<std::shared_ptr<Gr
 
 std::shared_ptr<Group> Multiplication::distribute() const {
   auto k = distributeDeep();
-  auto out = sanitize_distribute(k);
-  return out;
-}
-
-std::shared_ptr<Group> Multiplication::sanitize_distribute(const std::shared_ptr<Group> sop) const {
-  std::vector<std::shared_ptr<Group>> new_sop = std::vector<std::shared_ptr<Group>>();
-  for (const auto &mult : sop->get_elements()) {
-    std::unordered_map<CHAR_TYPE, int> map = std::unordered_map<CHAR_TYPE, int>();
-    std::vector<std::shared_ptr<Group>> vec = std::vector<std::shared_ptr<Group>>();
-    for (const auto &elem : mult->get_elements()) {
-      if (auto var = std::dynamic_pointer_cast<Variable>(elem)) {
-        if (map.find(var->getRaw()) == map.end()) {
-          map[var->getRaw()] = 1;
-        } else {
-          map[var->getRaw()] = map[var->getRaw()] + 1;
-        }
-      } else {
-        // no idea if needed tbh
-        vec.push_back(elem);
-      }
-    }
-    for (const std::pair<const CHAR_TYPE, int> &n : map) {
-      CHAR_TYPE c = n.first;
-      int i = n.second;
-      if (i == 1) {
-        vec.push_back(std::make_shared<Variable>(Variable(c)));
-      } else {
-        vec.push_back(std::make_shared<Power>(Power(std::make_shared<Variable>(Variable(c)), i)));
-      }
-    }
-    if (vec.size() == 1) {
-      new_sop.push_back(vec[0]);
-    } else {
-      new_sop.push_back(std::make_shared<Multiplication>(Multiplication(vec)));
-    }
-  }
-  return std::make_shared<Addition>(Addition(new_sop));
+  return k;
 }
 
 std::ostream &Multiplication::print(std::ostream &stream) const {

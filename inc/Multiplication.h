@@ -27,9 +27,13 @@ public:
   std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const override;
   std::ostream &print(std::ostream &stream) const override;
   std::ostream &latex(std::ostream &stream) const override;
-
-protected:
-  std::shared_ptr<Group> sanitize_distribute(const std::shared_ptr<Group> sop) const;
+/*
+  template<typename T,N> requires std::is_base_of<Group,T> && std::is_base_of<Group,N>
+  static std::shared_ptr<Group> merge(std::shared_ptr<Base<T>> g1O,std::shared_ptr<Base<N>> g2O){
+    auto g1 = g1O->clone_t();
+    auto g2 = g2O->clone_t();
+  }
+  */
 };
 
 inline std::shared_ptr<Group> operator*(Group &g1, Group &g2) {

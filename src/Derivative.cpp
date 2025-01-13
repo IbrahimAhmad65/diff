@@ -74,6 +74,13 @@ std::shared_ptr<Group> Derivative::diff(std::shared_ptr<Group> g, std::shared_pt
     return nullptr;
     */
   }
+  if (auto num = std::dynamic_pointer_cast<Subtraction>(g)) {
+    std::vector<std::shared_ptr<Group>> vec = std::vector<std::shared_ptr<Group>>();
+    for (const auto &elem : g->get_elements()) {
+      vec.push_back(diff(elem, x));
+    }
+    return std::make_shared<Subtraction>(Subtraction(vec));
+  }
   std::cout << "Unfinished derivative impl" << std::endl;
   return nullptr;
 }

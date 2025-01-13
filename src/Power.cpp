@@ -19,9 +19,16 @@ Power::Power(const Power *n) : Power(*n) {}
 std::shared_ptr<Group> Power::apply(std::vector<std::shared_ptr<Group>> &elements) const {
   auto base = elements[0];
   auto power = elements[1];
-  if (auto num_base = std::dynamic_pointer_cast<Number>(base)) {
-    if (auto num_pow = std::dynamic_pointer_cast<Number>(power)) {
+  if (auto num_pow = std::dynamic_pointer_cast<Number>(power)) {
+    if (auto num_base = std::dynamic_pointer_cast<Number>(base)) {
       return std::make_shared<Number>(Number(pow(num_base->getRaw(), num_pow->getRaw())));
+    }
+    if (num_pow->getRaw() == 0) {
+      auto n = Number(1);
+      return n.clone();
+    }
+    if (num_pow->getRaw() == 1) {
+      return base;
     }
   }
   return std::make_shared<Power>(Power(base, power));

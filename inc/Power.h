@@ -35,10 +35,6 @@ public:
     return out;
   }
 
-  /*std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
-    return std::make_shared<Power>(Power(elems));
-  }*/
-
   Power( Power *n);
   template <typename T>
   requires std::is_arithmetic_v<T> 

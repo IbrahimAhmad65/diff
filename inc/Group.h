@@ -36,6 +36,8 @@ public:
   virtual std::size_t get_name() const = 0;
 
   virtual std::shared_ptr<Group> clone() const =0;
+
+  virtual std::string get_name_g() const = 0;
 protected:
   std::vector<std::shared_ptr<Group>> elements;
 };
@@ -85,6 +87,10 @@ public:
   std::shared_ptr<Group> clone() const override{
     return std::make_shared<Derived>(static_cast<const Derived&>(*this));
   }   
+  
+  std::shared_ptr<Derived> clone_t() const {
+    return std::make_shared<Derived>(static_cast<const Derived&>(*this));
+  }   
 
   std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const override{
     return std::make_shared<Derived>(Derived(elems));
@@ -93,5 +99,10 @@ public:
   constexpr std::size_t get_name() const override{
     return hashString(typeid(Derived).name());
   }
+  
+  std::string get_name_g() const override{
+    return (typeid(Derived).name());
+  }
+
 };
 
