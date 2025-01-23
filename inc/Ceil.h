@@ -2,30 +2,30 @@
 #include <Group.h>
 #include <iostream>
 #include <memory>
-class Negation : public Base<Negation> {
+class Ceil : public Base<Ceil> {
 public:
-  Negation(const std::shared_ptr<Group>& g) { 
+  Ceil(const std::shared_ptr<Group>& g) { 
     local = g;
     elements.push_back(local);
   }
 
-  Negation(Group& g) { 
+  Ceil(const Group& g) { 
     local = g.clone();
     elements.push_back(local);
   }
 
-  Negation(const Negation *n) { 
+  Ceil(const Ceil *n) { 
     local = n->local; 
     elements.push_back(local);
   }
 
-  Negation(std::vector<std::shared_ptr<Group>> &elements) { 
+  Ceil(std::vector<std::shared_ptr<Group>> &elements) { 
     local = elements[0]; 
     elements.push_back(local);
   }
    
   std::shared_ptr<Group> apply(std::vector<std::shared_ptr<Group>> &elements) const override {
-    return std::make_shared<Negation>(elements);
+    return std::make_shared<Ceil>(elements);
   }
   
   std::shared_ptr<Group> getRaw() { return local; }
@@ -46,21 +46,14 @@ public:
 
 
   std::shared_ptr<Group> distribute(std::vector<std::shared_ptr<Group>> &elements) const override{
-    return std::make_shared<Negation>(this);
+    return std::make_shared<Ceil>(this);
   };  
 
   std::shared_ptr<Group> distribute() const override{
-    return std::make_shared<Negation>(this);
+    return std::make_shared<Ceil>(this);
   };  
 
 private:
   std::shared_ptr<Group> local;
 };
 
-inline std::shared_ptr<Group> operator-(Group &g1) {
-  return std::make_shared<Negation>(Negation(g1));
-}
-
-inline std::shared_ptr<Group> operator-(std::shared_ptr<Group> g1) {
-  return std::make_shared<Negation>(Negation(g1));
-}

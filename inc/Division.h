@@ -89,23 +89,27 @@ inline std::shared_ptr<Group> operator/(std::shared_ptr<Group> g1, std::shared_p
 
 template <typename T> requires std::is_arithmetic_v<T> 
 inline std::shared_ptr<Group> operator/(std::shared_ptr<Group> g1, T g2) {
-  if (auto n = std::dynamic_pointer_cast<Division>(g1)) {
-    std::vector<std::shared_ptr<Group>> elems = n->get_elements();
-    elems.push_back(std::make_shared<Number>(Number(g2)));
-    return std::make_shared<Division>(Division(elems));
-  }
   auto k = std::vector<std::shared_ptr<Group>>{g1, std::make_shared<Number>(Number(g2))};
+  return std::make_shared<Division>(Division(k));
+}
+
+template <typename T> requires std::is_arithmetic_v<T> 
+inline std::shared_ptr<Group> operator/( T g2, std::shared_ptr<Group> g1) {
+  auto k = std::vector<std::shared_ptr<Group>>{std::make_shared<Number>(Number(g2)), g1};
   return std::make_shared<Division>(Division(k));
 }
 
 template <typename T> requires std::is_arithmetic_v<T> 
 inline std::shared_ptr<Group> operator/(Group &g1, T g2) {
   auto n1 = g1.clone();
-  if (auto n = std::dynamic_pointer_cast<Division>(n1)) {
-    std::vector<std::shared_ptr<Group>> elems = n->get_elements();
-    elems.push_back(std::make_shared<Number>(Number(g2)));
-    return std::make_shared<Division>(Division(elems));
-  }
   auto k = std::vector<std::shared_ptr<Group>>{g1.clone(), std::make_shared<Number>(Number(g2))};
+  return std::make_shared<Division>(Division(k));
+}
+
+
+template <typename T> requires std::is_arithmetic_v<T> 
+inline std::shared_ptr<Group> operator/(T g2, Group &g1) {
+  auto n1 = g1.clone();
+  auto k = std::vector<std::shared_ptr<Group>>{ std::make_shared<Number>(Number(g2)), g1.clone()};
   return std::make_shared<Division>(Division(k));
 }

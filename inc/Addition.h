@@ -32,11 +32,25 @@ inline std::shared_ptr<Group> operator+(std::shared_ptr<Group> g1, T g2) {
   auto k = std::vector<std::shared_ptr<Group>>{g1, std::make_shared<Number>(Number(g2))};
   return std::make_shared<Addition>(Addition(k));
 }
+template <typename T>
+requires std::is_arithmetic_v<T> 
+
+inline std::shared_ptr<Group> operator+(T g2, std::shared_ptr<Group> g1) {
+  auto k = std::vector<std::shared_ptr<Group>>{g1, std::make_shared<Number>(Number(g2))};
+  return std::make_shared<Addition>(Addition(k));
+}
 
 template <typename T>
 requires std::is_arithmetic_v<T> 
 
 inline std::shared_ptr<Group> operator+(Group &g1, T g2) {
+  auto k = std::vector<std::shared_ptr<Group>>{g1.clone(), std::make_shared<Number>(Number(g2))};
+  return std::make_shared<Addition>(Addition(k));
+}
+
+template <typename T>
+requires std::is_arithmetic_v<T> 
+inline std::shared_ptr<Group> operator+(T g2, Group &g1) {
   auto k = std::vector<std::shared_ptr<Group>>{g1.clone(), std::make_shared<Number>(Number(g2))};
   return std::make_shared<Addition>(Addition(k));
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <Eigen/Core>
 #include <cxxabi.h>
 
 class Group{
@@ -26,6 +27,11 @@ public:
 
   friend std::ostream &operator<<(std::ostream &stream, const Group &g) {
     return g.print(stream);
+  } 
+
+  
+  friend std::ostream &operator<<(std::ostream &stream, const std::shared_ptr<Group> &g) {
+    return g->print(stream);
   } 
   
   virtual std::shared_ptr<Group> build(std::vector<std::shared_ptr<Group>> elems) const = 0;
@@ -104,5 +110,14 @@ public:
     return (typeid(Derived).name());
   }
 
+  operator std::shared_ptr<Derived>(){
+    return clone_t();
+  }
+
+  operator std::shared_ptr<Group>(){
+    return clone();
+  }
 };
+
+
 

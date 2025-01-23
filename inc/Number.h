@@ -10,6 +10,7 @@
 // template<typename T> requires Numeric<T>
 class Number : public Base<Number> {
 public:
+  Number() { local = 0; }
   Number(float n) { local = n; }
   Number(double n) { local = n; }
   Number(short n) { local = n; }
@@ -58,3 +59,5 @@ bool operator >(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);
 bool operator <(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);
 
 bool operator ==(std::shared_ptr<Number> g1,std::shared_ptr<Number> g2);
+
+
