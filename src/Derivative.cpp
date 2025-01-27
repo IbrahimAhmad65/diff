@@ -49,30 +49,6 @@ std::shared_ptr<Group> Derivative::diff(std::shared_ptr<Group> g, std::shared_pt
     auto twotwo = f_x * g_xp;
     auto two = twoone + twotwo;
     return one * two;
-    /*
-    auto base = g->get_elements()[0];
-    if (auto base_var = std::dynamic_pointer_cast<Variable>(base)) {
-      if (base_var == x) {
-        auto exp = g->get_elements()[1];
-        if (auto exp_var = std::dynamic_pointer_cast<Variable>(exp)) {
-          if (exp_var == x) {
-            std::cout << "Unfinished derivative impl" << std::endl;
-            return nullptr;
-          }
-          auto pow = Power(x, exp_var + -1);
-          return std::make_shared<Multiplication>(exp_var * pow);
-          // need ln to finish impl sadge
-        } else if (auto exp_var = std::dynamic_pointer_cast<Number>(exp)) {
-          auto pow = Power(x, exp_var + -1);
-          return std::make_shared<Multiplication>(exp_var * pow);
-        }
-      }
-      std::cout << "Unfinished derivative impl" << std::endl;
-      return nullptr;
-    }
-    std::cout << "Unfinished derivative impl" << std::endl;
-    return nullptr;
-    */
   }
   if (auto num = std::dynamic_pointer_cast<Subtraction>(g)) {
     std::vector<std::shared_ptr<Group>> vec = std::vector<std::shared_ptr<Group>>();
@@ -84,3 +60,4 @@ std::shared_ptr<Group> Derivative::diff(std::shared_ptr<Group> g, std::shared_pt
   std::cout << "Unfinished derivative impl" << std::endl;
   return nullptr;
 }
+
